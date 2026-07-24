@@ -2,6 +2,7 @@ import streamlit as st
 from datetime import date
 
 from database.pacientes import listar_pacientes
+from database.storage import upload_pdf
 from services.exame_service import cadastrar_exame, buscar_exames
 
 
@@ -48,51 +49,47 @@ if pacientes:
     )
 
 
-arquivo_pdf = st.file_uploader(
-    "Enviar exame PDF",
-    type=["pdf"]
-)
+    arquivo_pdf = st.file_uploader(
+        "Enviar exame PDF",
+        type=["pdf"]
+    )
 
 
     if st.button("Salvar exame"):
 
-        from database.storage import upload_pdf
 
-if arquivo_pdf:
-
-    caminho_pdf = upload_pdf(
-        arquivo_pdf.getvalue(),
-        arquivo_pdf.name
-    )
+        if arquivo_pdf:
 
 
-    dados = {
-
-        "paciente_id": paciente["id"],
-        "data_exame": data_exame.isoformat(),
-        "laboratorio": laboratorio,
-        "nome_pdf": caminho_pdf
-
-    }
+            caminho_pdf = upload_pdf(
+                arquivo_pdf.getvalue(),
+                arquivo_pdf.name
+            )
 
 
-    cadastrar_exame(dados)
+            dados = {
 
-    st.success(
-        "Exame cadastrado com PDF!"
-    )
+                "paciente_id": paciente["id"],
+                "data_exame": data_exame.isoformat(),
+                "laboratorio": laboratorio,
+                "nome_pdf": caminho_pdf
 
-else:
-
-    st.warning(
-        "Selecione um arquivo PDF."
-    )
-        cadastrar_exame(dados)
+            }
 
 
-        st.success(
-            "Exame cadastrado!"
-        )
+            cadastrar_exame(dados)
+
+
+            st.success(
+                "Exame cadastrado com PDF!"
+            )
+
+
+        else:
+
+            st.warning(
+                "Selecione um arquivo PDF."
+            )
 
 
 else:
@@ -105,7 +102,11 @@ else:
 
 st.divider()
 
-st.subheader("Exames cadastrados")
+
+st.subheader(
+    "Exames cadastrados"
+)
+
 
 st.dataframe(
     buscar_exames(),
