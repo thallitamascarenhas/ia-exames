@@ -69,19 +69,20 @@ with st.form("form_paciente"):
 
         dados = {
 
-    "nome": nome,
-    "nascimento": nascimento.isoformat(),
-    "sexo": sexo,
-    "altura": altura,
-    "peso": peso,
-    "telefone": telefone,
-    "email": email,
-    "observacoes": observacoes
+            "nome": nome,
+            "nascimento": nascimento.isoformat(),
+            "sexo": sexo,
+            "altura": altura,
+            "peso": peso,
+            "telefone": telefone,
+            "email": email,
+            "observacoes": observacoes
 
-}
+        }
 
 
-cadastrar_paciente(dados)
+        cadastrar_paciente(dados)
+
 
         st.success(
             "Paciente cadastrado com sucesso!"
