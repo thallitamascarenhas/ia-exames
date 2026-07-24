@@ -1,11 +1,11 @@
 import streamlit as st
-
 from datetime import date
 
 from database.pacientes import (
     salvar_paciente,
     listar_pacientes
 )
+
 
 st.set_page_config(
     page_title="Pacientes",
@@ -22,16 +22,11 @@ with st.form("form_paciente"):
         "Nome completo"
     )
 
-
-from datetime import date
-
-
-nascimento = st.date_input(
-    "Data de nascimento",
-    min_value=date(1900, 1, 1),
-    max_value=date.today()
-)
-
+    nascimento = st.date_input(
+        "Data de nascimento",
+        min_value=date(1900, 1, 1),
+        max_value=date.today()
+    )
 
     sexo = st.selectbox(
         "Sexo",
@@ -42,28 +37,23 @@ nascimento = st.date_input(
         ]
     )
 
-
     altura = st.number_input(
         "Altura (cm)",
         min_value=0
     )
-
 
     peso = st.number_input(
         "Peso (kg)",
         min_value=0.0
     )
 
-
     telefone = st.text_input(
         "Telefone"
     )
 
-
     email = st.text_input(
         "Email"
     )
-
 
     observacoes = st.text_area(
         "Observações"
@@ -88,11 +78,9 @@ nascimento = st.date_input(
             observacoes
         )
 
-
         st.success(
             "Paciente cadastrado com sucesso!"
         )
-
 
 
 st.divider()
