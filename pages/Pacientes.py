@@ -1,10 +1,11 @@
 import streamlit as st
 
+from datetime import date
+
 from database.pacientes import (
     salvar_paciente,
     listar_pacientes
 )
-
 
 st.set_page_config(
     page_title="Pacientes",
