@@ -48,23 +48,45 @@ if pacientes:
     )
 
 
-    nome_pdf = st.text_input(
-        "Nome do arquivo PDF"
-    )
+arquivo_pdf = st.file_uploader(
+    "Enviar exame PDF",
+    type=["pdf"]
+)
 
 
     if st.button("Salvar exame"):
 
-        dados = {
+        from database.storage import upload_pdf
 
-            "paciente_id": paciente["id"],
-            "data_exame": data_exame.isoformat(),
-            "laboratorio": laboratorio,
-            "nome_pdf": nome_pdf
+if arquivo_pdf:
 
-        }
+    caminho_pdf = upload_pdf(
+        arquivo_pdf.getvalue(),
+        arquivo_pdf.name
+    )
 
 
+    dados = {
+
+        "paciente_id": paciente["id"],
+        "data_exame": data_exame.isoformat(),
+        "laboratorio": laboratorio,
+        "nome_pdf": caminho_pdf
+
+    }
+
+
+    cadastrar_exame(dados)
+
+    st.success(
+        "Exame cadastrado com PDF!"
+    )
+
+else:
+
+    st.warning(
+        "Selecione um arquivo PDF."
+    )
         cadastrar_exame(dados)
 
 
