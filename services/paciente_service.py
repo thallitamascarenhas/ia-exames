@@ -18,7 +18,6 @@ def cadastrar_paciente(dados):
     )
 
 
-
 def buscar_pacientes():
 
     return listar_pacientes()
