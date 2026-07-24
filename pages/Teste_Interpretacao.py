@@ -7,12 +7,12 @@ from services.resultado_service import (
 )
 
 
-st.title("🧪 Teste de interpretação")
+st.title("🧪 Teste de Interpretação")
 
 
 valor = st.number_input(
-    "Digite o valor",
-    value=22
+    "Valor do exame",
+    value=22.0
 )
 
 
@@ -25,26 +25,11 @@ if st.button("Avaliar"):
 
     if marcador:
 
-        st.write(
-            "Marcador encontrado:"
-        )
-
-        st.write(
-            marcador
-        )
+        nome = marcador["marcadores"]["nome_padrao"]
 
 
         parametro = buscar_parametro(
             marcador["marcador_id"]
-        )
-
-
-        st.write(
-            "Parâmetro:"
-        )
-
-        st.write(
-            parametro
         )
 
 
@@ -54,8 +39,26 @@ if st.button("Avaliar"):
         )
 
 
-        st.success(
+        st.subheader(nome)
+
+
+        col1, col2 = st.columns(2)
+
+
+        col1.metric(
+            "Resultado",
+            f"{valor} {parametro['unidade']}"
+        )
+
+
+        col2.metric(
+            "Classificação",
             resultado
+        )
+
+
+        st.info(
+            parametro["observacao"]
         )
 
 
