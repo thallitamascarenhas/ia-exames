@@ -9,3 +9,11 @@ def conectar():
     key = st.secrets["SUPABASE_KEY"]
 
     return create_client(url, key)
+    
+def listar_pacientes():
+
+    supabase = conectar()
+
+    resposta = supabase.table("pacientes").select("*").execute()
+
+    return resposta.data
