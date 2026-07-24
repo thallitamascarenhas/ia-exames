@@ -114,3 +114,24 @@ def buscar_parametro(marcador_id):
 
 
     return None
+
+
+def avaliar_resultado(valor, parametro):
+
+    if valor < parametro["critico_min"]:
+        return "Crítico baixo"
+
+
+    if valor < parametro["alerta_min"]:
+        return "Alerta baixo"
+
+
+    if valor <= parametro["valor_max"]:
+        return "Normal"
+
+
+    if valor <= parametro["alerta_max"]:
+        return "Alerta alto"
+
+
+    return "Crítico alto"
