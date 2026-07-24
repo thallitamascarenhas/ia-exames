@@ -1,19 +1,12 @@
-from supabase import create_client
 import streamlit as st
+from supabase import create_client
 
-@st.cache_resource
-def conectar():
 
-    url = st.secrets["SUPABASE_URL"]
+SUPABASE_URL = st.secrets["SUPABASE_URL"]
+SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
 
-    key = st.secrets["SUPABASE_KEY"]
 
-    return create_client(url, key)
-    
-def listar_pacientes():
-
-    supabase = conectar()
-
-    resposta = supabase.table("pacientes").select("*").execute()
-
-    return resposta.data
+supabase = create_client(
+    SUPABASE_URL,
+    SUPABASE_KEY
+)
