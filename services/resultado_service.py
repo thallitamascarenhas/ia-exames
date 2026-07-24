@@ -122,12 +122,8 @@ def avaliar_resultado(valor, parametro):
         return "Crítico baixo"
 
 
-    if valor < parametro["alerta_min"]:
-        return "Alerta baixo"
-
-
     if valor < parametro["valor_min"]:
-        return "Abaixo do recomendado"
+        return "Alerta baixo"
 
 
     if valor <= parametro["valor_max"]:
