@@ -18,8 +18,10 @@ if arquivo:
         arquivo
     )
 
+    st.subheader("Texto extraído")
+
     st.text_area(
-        "Texto extraído",
+        "",
         texto,
         height=400
     )
