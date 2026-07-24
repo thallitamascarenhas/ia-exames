@@ -1,9 +1,12 @@
 import fitz
 
 
-def extrair_texto_pdf(caminho_pdf):
+def extrair_texto_pdf(arquivo_pdf):
 
-    documento = fitz.open(caminho_pdf)
+    documento = fitz.open(
+        stream=arquivo_pdf.read(),
+        filetype="pdf"
+    )
 
     texto = ""
 
