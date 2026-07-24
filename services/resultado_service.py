@@ -59,3 +59,37 @@ def extrair_resultados(texto):
 
 
     return resultados
+
+from database.supabase import supabase
+
+
+def identificar_marcador(nome):
+    
+    nome = nome.lower().strip()
+
+
+    resposta = (
+        supabase
+        .table("sinonimos_marcadores")
+        .select(
+            """
+            marcador_id,
+            marcadores(
+                nome_padrao
+            )
+            """
+        )
+        .ilike(
+            "sinonimo",
+            nome
+        )
+        .execute()
+    )
+
+
+    if resposta.data:
+
+        return resposta.data[0]
+
+
+    return None
