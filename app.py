@@ -36,3 +36,7 @@ st.info(
 "Bem-vinda ao Exame Inteligente."
 
 )
+
+from database.supabase import supabase
+
+st.success("Conectado ao Supabase!")
