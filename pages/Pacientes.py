@@ -1,9 +1,9 @@
 import streamlit as st
 from datetime import date
 
-from database.pacientes import (
-    salvar_paciente,
-    listar_pacientes
+from services.paciente_service import (
+    cadastrar_paciente,
+    buscar_pacientes
 )
 
 
@@ -67,16 +67,21 @@ with st.form("form_paciente"):
 
     if salvar:
 
-        salvar_paciente(
-            nome,
-            nascimento.isoformat(),
-            sexo,
-            altura,
-            peso,
-            telefone,
-            email,
-            observacoes
-        )
+        dados = {
+
+    "nome": nome,
+    "nascimento": nascimento.isoformat(),
+    "sexo": sexo,
+    "altura": altura,
+    "peso": peso,
+    "telefone": telefone,
+    "email": email,
+    "observacoes": observacoes
+
+}
+
+
+cadastrar_paciente(dados)
 
         st.success(
             "Paciente cadastrado com sucesso!"
@@ -91,7 +96,7 @@ st.subheader(
 )
 
 
-dados = listar_pacientes()
+dados = buscar_pacientes()
 
 
 st.dataframe(
