@@ -22,9 +22,13 @@ with st.form("form_paciente"):
     )
 
 
-    nascimento = st.date_input(
-        "Data de nascimento"
-    )
+from datetime import date
+
+
+nascimento = st.date_input(
+    "Data de nascimento",
+    min_value=date(1900, 1, 1),
+    max_value=date.today()
 
 
     sexo = st.selectbox(
