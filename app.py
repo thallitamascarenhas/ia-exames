@@ -1,30 +1,38 @@
 import streamlit as st
 
+from config.settings import *
+
+
 st.set_page_config(
-    page_title="Exame Inteligente",
-    page_icon="🩺",
+
+    page_title=APP_NAME,
+
+    page_icon=PAGE_ICON,
+
     layout="wide"
+
 )
 
-st.title("🩺 Exame Inteligente")
 
-st.subheader("Sua plataforma inteligente para análise de exames laboratoriais")
+st.title(PAGE_ICON + " " + APP_NAME)
 
-st.markdown("---")
+st.caption(APP_DESCRIPTION)
 
-col1, col2, col3 = st.columns(3)
+st.divider()
 
-with col1:
-    st.metric("👥 Pacientes", "0")
+c1,c2,c3,c4=st.columns(4)
 
-with col2:
-    st.metric("📄 Exames", "0")
+c1.metric("Pacientes","0")
 
-with col3:
-    st.metric("📈 Tendências", "0")
+c2.metric("Exames","0")
 
-st.markdown("---")
+c3.metric("Resultados","0")
+
+c4.metric("Alertas","0")
+
 
 st.info(
-    "Bem-vinda! Este sistema armazenará o histórico dos pacientes, analisará exames laboratoriais e identificará tendências utilizando inteligência artificial."
+
+"Bem-vinda ao Exame Inteligente."
+
 )
