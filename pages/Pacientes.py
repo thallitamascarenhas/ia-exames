@@ -29,6 +29,7 @@ nascimento = st.date_input(
     "Data de nascimento",
     min_value=date(1900, 1, 1),
     max_value=date.today()
+)
 
 
     sexo = st.selectbox(
