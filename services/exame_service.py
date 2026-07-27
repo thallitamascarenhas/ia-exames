@@ -1,6 +1,7 @@
 from database.exames import (
     salvar_exame,
-    listar_exames
+    listar_exames,
+    buscar_exame_por_id
 )
 
 
@@ -18,3 +19,8 @@ def cadastrar_exame(dados):
 def buscar_exames():
 
     return listar_exames()
+def obter_exame(exame_id):
+
+    return buscar_exame_por_id(
+        exame_id
+    )
