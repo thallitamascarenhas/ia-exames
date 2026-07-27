@@ -233,3 +233,63 @@ def salvar_resultado(resultado):
     )
 
     return resposta.data
+def montar_resultado(
+    exame_id,
+    marcador_info,
+    valor,
+    unidade,
+    parametro
+):
+
+    status = "Sem parâmetro"
+
+
+    if parametro:
+
+        status = interpretar(
+            valor,
+            parametro
+        )
+
+
+    resultado = {
+
+        "exame_id": exame_id,
+
+        "marcador": marcador_info["nome_padrao"],
+
+        "categoria": "Laboratorial",
+
+        "resultado": str(valor),
+
+        "unidade": unidade,
+
+        "referencia_min": (
+            parametro["valor_min"]
+            if parametro
+            else None
+        ),
+
+        "referencia_max": (
+            parametro["valor_max"]
+            if parametro
+            else None
+        ),
+
+        "status": status
+    }
+
+
+    return resultado
+
+def salvar_resultados(lista_resultados):
+
+    resposta = (
+        supabase
+        .table("resultados")
+        .insert(lista_resultados)
+        .execute()
+    )
+
+    return resposta.data
+
