@@ -47,3 +47,22 @@ def salvar_resultado(
 
 
     return resposta.data
+
+def buscar_parametro(marcador_id):
+
+    resposta = (
+        supabase
+        .table("parametros_referencia")
+        .select("*")
+        .eq(
+            "marcador_id",
+            marcador_id
+        )
+        .execute()
+    )
+
+
+    if resposta.data:
+        return resposta.data[0]
+
+    return None
