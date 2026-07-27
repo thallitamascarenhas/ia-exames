@@ -208,7 +208,11 @@ def encontrar_marcadores(texto):
 
         for item in sinonimos:
 
-            if item["sinonimo"].lower() in linha_normalizada:
+            sinonimo = item["sinonimo"].lower().strip()
+
+
+            if linha_normalizada == sinonimo:
+
 
                 ja_existe = any(
                     encontrado["marcador_id"] == item["marcador_id"]
