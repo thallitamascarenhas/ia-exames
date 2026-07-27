@@ -327,3 +327,132 @@ def salvar_resultados_exame(
 
     return salvos
 
+from services.extracao_service import extrair_valor_unidade
+from database.resultados import salvar_resultado
+
+
+def processar_resultados_exame(
+    exame_id,
+    texto
+):
+
+    resultados_salvos = []
+
+
+    marcadores = encontrar_marcadores(
+        texto
+    )
+
+
+    valores = extrair_valor_unidade(
+        texto
+    )
+
+
+    for marcador in marcadores:
+
+
+        valor_encontrado = None
+
+
+        for valor in valores:
+
+            if marcador["nome_padrao"].lower() in valor["linha"].lower():
+
+                valor_encontrado = valor
+                break
+
+
+        if not valor_encontrado:
+            continue
+
+
+
+        parametro = buscar_parametro(
+            marcador["marcador_id"]
+        )
+
+
+        if parametro:
+
+
+            status = interpretar(
+                valor_encontrado["valor"],
+                parametro
+            )
+
+
+            categoria = status
+
+
+        else:
+
+
+            status = "Sem parâmetro"
+
+            categoria = "Não avaliado"
+
+
+
+        dados = {
+
+
+            "exame_id": exame_id,
+
+            "marcador_id": marcador["marcador_id"],
+
+            "categoria": categoria,
+
+            "resultado": str(
+                valor_encontrado["valor"]
+            ),
+
+            "valor_numerico": valor_encontrado["valor"],
+
+            "unidade": valor_encontrado["unidade"],
+
+
+            "referencia_min": parametro["valor_min"]
+            if parametro else None,
+
+
+            "referencia_max": parametro["valor_max"]
+            if parametro else None,
+
+
+            "alerta_min": parametro["alerta_min"]
+            if parametro else None,
+
+
+            "alerta_max": parametro["alerta_max"]
+            if parametro else None,
+
+
+            "critico_min": parametro["critico_min"]
+            if parametro else None,
+
+
+            "critico_max": parametro["critico_max"]
+            if parametro else None,
+
+
+            "status": status,
+
+
+            "observacao": parametro["observacao"]
+            if parametro else None
+
+        }
+
+
+        salvar_resultado(
+            **dados
+        )
+
+
+        resultados_salvos.append(
+            dados
+        )
+
+
+    return resultados_salvos
