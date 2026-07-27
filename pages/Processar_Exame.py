@@ -35,6 +35,7 @@ if exames:
 
     if st.button("Processar"):
 
+
         pdf = obter_pdf_exame(
             exame
         )
@@ -53,6 +54,7 @@ if exames:
         st.text(
             texto
         )
+
 
 else:
 
