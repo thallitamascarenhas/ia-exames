@@ -164,3 +164,60 @@ def interpretar(valor, parametro):
 
 
     return "Normal"
+
+from database.supabase import supabase
+
+
+def listar_sinonimos():
+
+    resposta = (
+        supabase
+        .table("sinonimos_marcadores")
+        .select(
+            """
+            sinonimo,
+            marcador_id,
+            marcadores(
+                nome_padrao
+            )
+            """
+        )
+        .execute()
+    )
+
+
+    return resposta.data
+
+def encontrar_marcadores(texto):
+
+    encontrados = []
+
+    sinonimos = listar_sinonimos()
+
+
+    linhas = [
+        linha.strip()
+        for linha in texto.split("\n")
+        if linha.strip()
+    ]
+
+
+    for linha in linhas:
+
+        linha_normalizada = linha.lower()
+
+
+        for item in sinonimos:
+
+            if item["sinonimo"].lower() in linha_normalizada:
+
+                encontrados.append(
+                    {
+                        "linha": linha,
+                        "marcador_id": item["marcador_id"],
+                        "nome_padrao": item["marcadores"]["nome_padrao"]
+                    }
+                )
+
+
+    return encontrados
