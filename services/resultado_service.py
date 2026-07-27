@@ -330,14 +330,12 @@ def salvar_resultados_exame(
 from services.extracao_service import extrair_valor_unidade
 from database.resultados import salvar_resultado
 
-
 def processar_resultados_exame(
     exame_id,
     texto
 ):
 
     resultados_salvos = []
-
 
     linhas = [
         linha.strip()
@@ -354,15 +352,12 @@ def processar_resultados_exame(
     for marcador in marcadores:
 
 
-        valor = None
-        unidade = None
+        valor_encontrado = None
 
 
         for i, linha in enumerate(linhas):
 
-
-            if linha.lower() == marcador["nome_padrao"].lower():
-
+            if linha == marcador["nome_padrao"]:
 
                 proxima_linha = linhas[i+1]
 
@@ -375,20 +370,22 @@ def processar_resultados_exame(
 
                 if encontrado:
 
+                    valor_encontrado = {
 
-                    valor = float(
-                        encontrado.group(1).replace(",", ".")
-                    )
+                        "valor": float(
+                            encontrado.group(1).replace(",", ".")
+                        ),
 
+                        "unidade": encontrado.group(2)
 
-                    unidade = encontrado.group(2)
+                    }
 
 
                 break
 
 
 
-        if valor is None:
+        if not valor_encontrado:
             continue
 
 
@@ -401,12 +398,11 @@ def processar_resultados_exame(
         if parametro:
 
             status = interpretar(
-                valor,
+                valor_encontrado["valor"],
                 parametro
             )
 
             categoria = status
-
 
         else:
 
@@ -424,54 +420,41 @@ def processar_resultados_exame(
 
             "categoria": categoria,
 
-            "resultado": str(valor),
+            "resultado": str(
+                valor_encontrado["valor"]
+            ),
 
-            "valor_numerico": valor,
+            "valor_numerico": valor_encontrado["valor"],
 
-            "unidade": unidade,
+            "unidade": valor_encontrado["unidade"],
 
+            "referencia_min": parametro["valor_min"]
+            if parametro else None,
 
-            "referencia_min":
-                parametro["valor_min"]
-                if parametro else None,
+            "referencia_max": parametro["valor_max"]
+            if parametro else None,
 
+            "alerta_min": parametro["alerta_min"]
+            if parametro else None,
 
-            "referencia_max":
-                parametro["valor_max"]
-                if parametro else None,
+            "alerta_max": parametro["alerta_max"]
+            if parametro else None,
 
+            "critico_min": parametro["critico_min"]
+            if parametro else None,
 
-            "alerta_min":
-                parametro["alerta_min"]
-                if parametro else None,
-
-
-            "alerta_max":
-                parametro["alerta_max"]
-                if parametro else None,
-
-
-            "critico_min":
-                parametro["critico_min"]
-                if parametro else None,
-
-
-            "critico_max":
-                parametro["critico_max"]
-                if parametro else None,
-
+            "critico_max": parametro["critico_max"]
+            if parametro else None,
 
             "status": status,
 
-
-            "observacao":
-                parametro["observacao"]
-                if parametro else None
+            "observacao": parametro["observacao"]
+            if parametro else None
 
         }
 
 
-        salvar_resultado(
+        resposta = salvar_resultado(
             dados
         )
 
