@@ -1,19 +1,18 @@
+import uuid
+
 from database.supabase import supabase
 
 
-def upload_pdf(arquivo, nome_arquivo):
+def upload_pdf(arquivo, nome):
 
-    caminho = f"exames/{nome_arquivo}"
+    nome_unico = f"{uuid.uuid4()}_{nome}"
+
+    caminho = f"exames/{nome_unico}"
 
 
-    resposta = (
-        supabase
-        .storage
-        .from_("exames")
-        .upload(
-            caminho,
-            arquivo
-        )
+    supabase.storage.from_("exames").upload(
+        caminho,
+        arquivo
     )
 
 
