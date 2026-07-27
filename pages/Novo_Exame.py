@@ -1,122 +1,90 @@
 import streamlit as st
-from datetime import date
 
-from database.pacientes import listar_pacientes
-from database.storage import upload_pdf
-from services.exame_service import cadastrar_exame, buscar_exames
+from services.exame_service import (
+    buscar_exames,
+    obter_pdf_exame
+)
 
+from services.pdf_service import (
+    extrair_texto_pdf
+)
 
-st.set_page_config(
-    page_title="Novo Exame",
-    page_icon="📄"
+from services.resultado_service import (
+    processar_resultados_exame
 )
 
 
-st.title("📄 Novo Exame")
+st.title("🔬 Processar exame")
 
 
-pacientes = listar_pacientes()
+exames = buscar_exames()
 
 
-if pacientes:
+if exames:
 
-    nomes = [
-        paciente["nome"]
-        for paciente in pacientes
-    ]
+    opcoes = {
+        exame["id"]: exame
+        for exame in exames
+    }
 
 
-    paciente_selecionado = st.selectbox(
-        "Selecione o paciente",
-        nomes
+    exame_id = st.selectbox(
+        "Selecione o exame",
+        opcoes.keys()
     )
 
 
-    paciente = next(
-        p for p in pacientes
-        if p["nome"] == paciente_selecionado
+    exame = opcoes[exame_id]
+
+
+    st.write(
+        "Arquivo:",
+        exame["nome_pdf"]
     )
 
 
-    data_exame = st.date_input(
-        "Data do exame",
-        value=date.today()
-    )
+    if st.button("Processar"):
 
 
-    laboratorio = st.text_input(
-        "Laboratório"
-    )
+        pdf = obter_pdf_exame(
+            exame
+        )
 
 
-    arquivo_pdf = st.file_uploader(
-        "Enviar exame PDF",
-        type=["pdf"]
-    )
+        texto = extrair_texto_pdf(
+            pdf
+        )
 
 
-    if st.button("Salvar exame"):
+        st.subheader(
+            "Texto extraído"
+        )
 
 
-        if arquivo_pdf:
+        st.text(
+            texto
+        )
 
 
-            caminho_pdf = upload_pdf(
-                arquivo_pdf.getvalue(),
-                arquivo_pdf.name
-            )
+        resultados = processar_resultados_exame(
+            exame["id"],
+            texto
+        )
 
 
-            dados = {
-
-                "paciente_id": paciente["id"],
-                "data_exame": data_exame.isoformat(),
-                "laboratorio": laboratorio,
-                "nome_pdf": caminho_pdf
-
-            }
+        st.subheader(
+            "Resultados processados"
+        )
 
 
-            exame = cadastrar_exame(
-                dados
-            )
-
-
-            st.success(
-                "Exame cadastrado com PDF!"
-            )
-
-
-            st.write(
-                "ID do exame:",
-                exame["id"]
-            )
-
-
-        else:
-
-            st.warning(
-                "Selecione um arquivo PDF."
-            )
+        st.dataframe(
+            resultados,
+            width="stretch"
+        )
 
 
 else:
 
     st.warning(
-        "Cadastre um paciente primeiro."
+        "Nenhum exame cadastrado."
     )
-
-
-
-st.divider()
-
-
-st.subheader(
-    "Exames cadastrados"
-)
-
-
-st.dataframe(
-    buscar_exames(),
-    use_container_width=True
-)
