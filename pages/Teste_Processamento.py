@@ -34,6 +34,19 @@ if arquivo:
     st.subheader("Marcadores encontrados")
 
 
-    st.write(
-        encontrados
-    )
+import pandas as pd
+
+
+df = pd.DataFrame(encontrados)
+
+
+st.dataframe(
+    df[
+        [
+            "nome_padrao",
+            "linha",
+            "marcador_id"
+        ]
+    ],
+    width="stretch"
+)
