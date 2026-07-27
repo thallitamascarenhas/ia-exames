@@ -55,7 +55,24 @@ if exames:
             texto
         )
 
+from services.resultado_service import processar_resultados_exame
 
+
+resultados = processar_resultados_exame(
+    exame["id"],
+    texto
+)
+
+
+st.subheader(
+    "Resultados processados"
+)
+
+
+st.dataframe(
+    resultados,
+    width="stretch"
+)
 else:
 
     st.warning(
