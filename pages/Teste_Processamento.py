@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 from services.pdf_service import extrair_texto_pdf
 from services.resultado_service import encontrar_marcadores
@@ -15,7 +16,6 @@ arquivo = st.file_uploader(
 
 if arquivo:
 
-
     texto = extrair_texto_pdf(
         arquivo
     )
@@ -26,6 +26,7 @@ if arquivo:
     st.text(texto)
 
 
+
     encontrados = encontrar_marcadores(
         texto
     )
@@ -34,19 +35,16 @@ if arquivo:
     st.subheader("Marcadores encontrados")
 
 
-import pandas as pd
+    df = pd.DataFrame(encontrados)
 
 
-df = pd.DataFrame(encontrados)
-
-
-st.dataframe(
-    df[
-        [
-            "nome_padrao",
-            "linha",
-            "marcador_id"
-        ]
-    ],
-    width="stretch"
-)
+    st.dataframe(
+        df[
+            [
+                "nome_padrao",
+                "linha",
+                "marcador_id"
+            ]
+        ],
+        width="stretch"
+    )
