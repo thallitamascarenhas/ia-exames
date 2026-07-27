@@ -210,7 +210,10 @@ def encontrar_marcadores(texto):
         for item in sinonimos:
 
             if item["sinonimo"].lower() in linha_normalizada:
-
+if not any(
+    item["marcador_id"] == item["marcador_id"]
+    for item in encontrados
+):
                 encontrados.append(
                     {
                         "linha": linha,
@@ -219,5 +222,9 @@ def encontrar_marcadores(texto):
                     }
                 )
 
-
-    return encontrados
+return list(
+    {
+        item["marcador_id"]: item
+        for item in encontrados
+    }.values()
+)
