@@ -24,3 +24,10 @@ def obter_exame(exame_id):
     return buscar_exame_por_id(
         exame_id
     )
+def obter_pdf_exame(exame):
+
+    caminho = exame["nome_pdf"]
+
+    return baixar_pdf(
+        caminho
+    )
