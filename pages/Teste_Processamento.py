@@ -56,3 +56,62 @@ if arquivo:
         ],
         width="stretch"
     )
+
+    valores = extrair_valor_unidade(texto)
+
+
+    resultados_salvar = []
+
+
+    for marcador in encontrados:
+
+
+        for valor in valores:
+
+
+            if marcador["linha"] in valor["linha"]:
+
+
+                parametro = buscar_parametro(
+                    marcador["marcador_id"]
+                )
+
+
+                resultado = montar_resultado(
+
+                    exame_id="COLOCAR_ID_DO_EXAME",
+
+                    marcador_info={
+                        "nome_padrao": marcador["nome_padrao"]
+                    },
+
+                    valor=valor["valor"],
+
+                    unidade=valor["unidade"],
+
+                    parametro=parametro
+                )
+
+
+                resultados_salvar.append(
+                    resultado
+                )
+
+
+
+    if st.button("Salvar resultados"):
+
+
+        salvar_resultados(
+            resultados_salvar
+        )
+
+
+        st.success(
+            "Resultados salvos com sucesso!"
+        )
+
+
+        st.dataframe(
+            pd.DataFrame(resultados_salvar)
+        )
