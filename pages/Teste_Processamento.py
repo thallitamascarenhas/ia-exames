@@ -79,7 +79,7 @@ if arquivo:
 
                 resultado = montar_resultado(
 
-                    exame_id="COLOCAR_ID_DO_EXAME",
+                    exame_id="af05f639-9e72-4df8-a61b-392c8c7df826",
 
                     marcador_info={
                         "nome_padrao": marcador["nome_padrao"]
