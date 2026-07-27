@@ -222,3 +222,14 @@ def encontrar_marcadores(texto):
 
 
     return encontrados
+
+def salvar_resultado(resultado):
+
+    resposta = (
+        supabase
+        .table("resultados")
+        .insert(resultado)
+        .execute()
+    )
+
+    return resposta.data
