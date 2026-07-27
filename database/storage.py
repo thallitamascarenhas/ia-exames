@@ -17,3 +17,14 @@ def upload_pdf(arquivo, nome):
 
 
     return caminho
+
+def baixar_pdf(caminho):
+
+    arquivo = (
+        supabase
+        .storage
+        .from_("exames")
+        .download(caminho)
+    )
+
+    return arquivo
