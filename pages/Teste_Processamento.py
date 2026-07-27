@@ -1,3 +1,11 @@
+from services.resultado_service import (
+    montar_resultado,
+    salvar_resultados,
+    buscar_parametro
+)
+
+from services.extracao_service import extrair_valor_unidade
+
 import streamlit as st
 import pandas as pd
 
