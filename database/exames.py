@@ -38,4 +38,4 @@ def salvar_exame(
         .execute()
     )
 
-    return resposta.data
+    return resposta.data[0]
