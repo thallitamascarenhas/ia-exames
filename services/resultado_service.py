@@ -293,10 +293,23 @@ def processar_resultados_exame(
 
 
 
-        # AQUI ESTAVA O PROBLEMA
-        salvar_resultado(
-            dados
-        )
+
+     salvar_resultado(
+    dados["exame_id"],
+    dados["marcador_id"],
+    dados["categoria"],
+    dados["resultado"],
+    dados["valor_numerico"],
+    dados["unidade"],
+    dados["referencia_min"],
+    dados["referencia_max"],
+    dados["alerta_min"],
+    dados["alerta_max"],
+    dados["critico_min"],
+    dados["critico_max"],
+    dados["status"],
+    dados["observacao"]
+)
 
 
         resultados_salvos.append(
