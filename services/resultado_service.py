@@ -1,5 +1,5 @@
 import re
-
+from database.resultados import salvar_resultado
 
 def extrair_resultados(texto):
 
@@ -292,4 +292,38 @@ def salvar_resultados(lista_resultados):
     )
 
     return resposta.data
+
+def salvar_resultados_exame(
+    exame_id,
+    resultados
+):
+
+    salvos = []
+
+
+    for resultado in resultados:
+
+        dados = {
+
+            "exame_id": exame_id,
+            "marcador": resultado["marcador"],
+            "categoria": resultado["status"],
+            "resultado": str(resultado["resultado"]),
+            "unidade": resultado.get("unidade"),
+            "referencia_min": None,
+            "referencia_max": None,
+            "status": resultado["status"]
+
+        }
+
+
+        resposta = salvar_resultado(
+            dados
+        )
+
+
+        salvos.append(resposta)
+
+
+    return salvos
 
