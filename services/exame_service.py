@@ -4,6 +4,8 @@ from database.exames import (
     buscar_exame_por_id
 )
 
+from database.storage import baixar_pdf
+
 
 def cadastrar_exame(dados):
 
@@ -15,15 +17,18 @@ def cadastrar_exame(dados):
     )
 
 
-
 def buscar_exames():
 
     return listar_exames()
+
+
 def obter_exame(exame_id):
 
     return buscar_exame_por_id(
         exame_id
     )
+
+
 def obter_pdf_exame(exame):
 
     caminho = exame["nome_pdf"]
