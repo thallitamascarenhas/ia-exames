@@ -39,3 +39,24 @@ def salvar_exame(
     )
 
     return resposta.data[0]
+
+def buscar_exame_por_id(exame_id):
+
+    resposta = (
+        supabase
+        .table("exames")
+        .select("*")
+        .eq(
+            "id",
+            exame_id
+        )
+        .execute()
+    )
+
+
+    if resposta.data:
+
+        return resposta.data[0]
+
+
+    return None
