@@ -77,16 +77,21 @@ if pacientes:
             }
 
 
-exame = cadastrar_exame(dados)
+            exame = cadastrar_exame(
+                dados
+            )
 
-st.success(
-    "Exame cadastrado com PDF!"
-)
 
-st.write(
-    "ID do exame:",
-    exame["id"]
-)
+            st.success(
+                "Exame cadastrado com PDF!"
+            )
+
+
+            st.write(
+                "ID do exame:",
+                exame["id"]
+            )
+
 
         else:
 
