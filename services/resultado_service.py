@@ -339,12 +339,14 @@ def processar_resultados_exame(
     resultados_salvos = []
 
 
+    linhas = [
+        linha.strip()
+        for linha in texto.split("\n")
+        if linha.strip()
+    ]
+
+
     marcadores = encontrar_marcadores(
-        texto
-    )
-
-
-    valores = extrair_valor_unidade(
         texto
     )
 
@@ -352,18 +354,41 @@ def processar_resultados_exame(
     for marcador in marcadores:
 
 
-        valor_encontrado = None
+        valor = None
+        unidade = None
 
 
-        for valor in valores:
+        for i, linha in enumerate(linhas):
 
-            if marcador["nome_padrao"].lower() in valor["linha"].lower():
 
-                valor_encontrado = valor
+            if linha.lower() == marcador["nome_padrao"].lower():
+
+
+                proxima_linha = linhas[i+1]
+
+
+                encontrado = re.search(
+                    r"([-+]?\d+[,.]?\d*)\s*([a-zA-Zµ/%]+(?:/[a-zA-Z]+)?)?",
+                    proxima_linha
+                )
+
+
+                if encontrado:
+
+
+                    valor = float(
+                        encontrado.group(1).replace(",", ".")
+                    )
+
+
+                    unidade = encontrado.group(2)
+
+
                 break
 
 
-        if not valor_encontrado:
+
+        if valor is None:
             continue
 
 
@@ -375,18 +400,15 @@ def processar_resultados_exame(
 
         if parametro:
 
-
             status = interpretar(
-                valor_encontrado["valor"],
+                valor,
                 parametro
             )
-
 
             categoria = status
 
 
         else:
-
 
             status = "Sem parâmetro"
 
@@ -396,57 +418,61 @@ def processar_resultados_exame(
 
         dados = {
 
-
             "exame_id": exame_id,
 
             "marcador_id": marcador["marcador_id"],
 
             "categoria": categoria,
 
-            "resultado": str(
-                valor_encontrado["valor"]
-            ),
+            "resultado": str(valor),
 
-            "valor_numerico": valor_encontrado["valor"],
+            "valor_numerico": valor,
 
-            "unidade": valor_encontrado["unidade"],
+            "unidade": unidade,
 
 
-            "referencia_min": parametro["valor_min"]
-            if parametro else None,
+            "referencia_min":
+                parametro["valor_min"]
+                if parametro else None,
 
 
-            "referencia_max": parametro["valor_max"]
-            if parametro else None,
+            "referencia_max":
+                parametro["valor_max"]
+                if parametro else None,
 
 
-            "alerta_min": parametro["alerta_min"]
-            if parametro else None,
+            "alerta_min":
+                parametro["alerta_min"]
+                if parametro else None,
 
 
-            "alerta_max": parametro["alerta_max"]
-            if parametro else None,
+            "alerta_max":
+                parametro["alerta_max"]
+                if parametro else None,
 
 
-            "critico_min": parametro["critico_min"]
-            if parametro else None,
+            "critico_min":
+                parametro["critico_min"]
+                if parametro else None,
 
 
-            "critico_max": parametro["critico_max"]
-            if parametro else None,
+            "critico_max":
+                parametro["critico_max"]
+                if parametro else None,
 
 
             "status": status,
 
 
-            "observacao": parametro["observacao"]
-            if parametro else None
+            "observacao":
+                parametro["observacao"]
+                if parametro else None
 
         }
 
 
         salvar_resultado(
-            **dados
+            dados
         )
 
 
