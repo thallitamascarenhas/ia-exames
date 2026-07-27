@@ -194,7 +194,6 @@ def encontrar_marcadores(texto):
 
     sinonimos = listar_sinonimos()
 
-
     linhas = [
         linha.strip()
         for linha in texto.split("\n")
@@ -210,21 +209,22 @@ def encontrar_marcadores(texto):
         for item in sinonimos:
 
             if item["sinonimo"].lower() in linha_normalizada:
-if not any(
-    item["marcador_id"] == item["marcador_id"]
-    for item in encontrados
-):
-                encontrados.append(
-                    {
-                        "linha": linha,
-                        "marcador_id": item["marcador_id"],
-                        "nome_padrao": item["marcadores"]["nome_padrao"]
-                    }
+
+                ja_existe = any(
+                    encontrado["marcador_id"] == item["marcador_id"]
+                    for encontrado in encontrados
                 )
 
-return list(
-    {
-        item["marcador_id"]: item
-        for item in encontrados
-    }.values()
-)
+
+                if not ja_existe:
+
+                    encontrados.append(
+                        {
+                            "linha": linha,
+                            "marcador_id": item["marcador_id"],
+                            "nome_padrao": item["marcadores"]["nome_padrao"]
+                        }
+                    )
+
+
+    return encontrados
