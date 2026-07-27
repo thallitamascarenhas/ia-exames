@@ -1,48 +1,61 @@
 import streamlit as st
 
-from services.resultado_service import (
-    identificar_marcador,
-    buscar_parametro,
-    interpretar
-)
+from services.exame_service import buscar_exames, obter_pdf_exame
+from services.pdf_service import extrair_texto_pdf
 
 
-st.title("🧪 Processar exame")
+st.title("🔬 Processar exame")
 
 
-valor = st.number_input(
-    "Valor vitamina D",
-    value=22
-)
+exames = buscar_exames()
 
 
-if st.button("Processar"):
+if exames:
+
+    opcoes = {
+        exame["id"]: exame
+        for exame in exames
+    }
 
 
-    marcador = identificar_marcador(
-        "vitamina d"
+    exame_id = st.selectbox(
+        "Selecione o exame",
+        opcoes.keys()
     )
 
 
-    parametro = buscar_parametro(
-        marcador["marcador_id"]
-    )
-
-
-    status = interpretar(
-        valor,
-        parametro
-    )
+    exame = opcoes[exame_id]
 
 
     st.write(
-        "Marcador:",
-        marcador
+        "Arquivo:",
+        exame["nome_pdf"]
     )
 
-    st.write(
-        "Parâmetro:",
-        parametro
-    )
 
-    st.success(status)
+    if st.button("Processar"):
+
+        pdf = obter_pdf_exame(
+            exame
+        )
+
+
+        texto = extrair_texto_pdf(
+            pdf
+        )
+
+
+        st.subheader(
+            "Texto extraído"
+        )
+
+
+        st.text(
+            texto
+        )
+
+else:
+
+    st.warning(
+        "Nenhum exame cadastrado."
+    )
