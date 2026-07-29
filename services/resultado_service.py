@@ -2,7 +2,6 @@ import re
 
 from database.supabase import supabase
 from database.resultados import salvar_resultado
-from services.extracao_service import extrair_valor_unidade
 
 
 
@@ -19,11 +18,8 @@ def buscar_parametro(marcador_id):
         .execute()
     )
 
-
     if resposta.data:
-
         return resposta.data[0]
-
 
     return None
 
@@ -34,18 +30,14 @@ def interpretar(valor, parametro):
     if valor <= parametro["critico_min"]:
         return "Crítico baixo"
 
-
     if valor < parametro["valor_min"]:
         return "Abaixo do recomendado"
-
 
     if valor <= parametro["valor_max"]:
         return "Normal"
 
-
     if valor <= parametro["critico_max"]:
         return "Acima do recomendado"
-
 
     return "Crítico alto"
 
@@ -68,7 +60,6 @@ def listar_sinonimos():
         .execute()
     )
 
-
     return resposta.data
 
 
@@ -89,23 +80,21 @@ def encontrar_marcadores(texto):
 
     for linha in linhas:
 
-        linha_normalizada = linha.lower()
-
-
         for item in sinonimos:
 
             sinonimo = item["sinonimo"].lower().strip()
 
 
-            if linha_normalizada == sinonimo:
+            if linha.lower().strip() == sinonimo:
 
-                ja_existe = any(
+
+                existe = any(
                     x["marcador_id"] == item["marcador_id"]
                     for x in encontrados
                 )
 
 
-                if not ja_existe:
+                if not existe:
 
                     encontrados.append(
                         {
@@ -129,16 +118,16 @@ def processar_resultados_exame(
     resultados_salvos = []
 
 
-    marcadores = encontrar_marcadores(
-        texto
-    )
-
-
     linhas = [
         linha.strip()
         for linha in texto.split("\n")
         if linha.strip()
     ]
+
+
+    marcadores = encontrar_marcadores(
+        texto
+    )
 
 
 
@@ -156,26 +145,25 @@ def processar_resultados_exame(
 
                 if i + 1 < len(linhas):
 
-                    linha_valor = linhas[i+1]
+                    valor_linha = linhas[i+1]
 
 
-                    encontrado = re.search(
-                        r"([-+]?\d+[,.]?\d*)\s*([a-zA-Zµ/%]+(?:/[a-zA-Z]+)?)?",
-                        linha_valor
+                    resultado = re.search(
+                        r"([-+]?\d+[,.]?\d*)\s*([a-zA-Zµ/%]+)?",
+                        valor_linha
                     )
 
 
-                    if encontrado:
+                    if resultado:
 
 
                         valor_encontrado = {
 
                             "valor": float(
-                                encontrado.group(1)
-                                .replace(",", ".")
+                                resultado.group(1).replace(",", ".")
                             ),
 
-                            "unidade": encontrado.group(2)
+                            "unidade": resultado.group(2)
 
                         }
 
@@ -210,11 +198,9 @@ def processar_resultados_exame(
 
         else:
 
-
             status = "Sem parâmetro"
 
             categoria = "Não avaliado"
-
 
 
 
@@ -223,99 +209,89 @@ def processar_resultados_exame(
 
             "exame_id": exame_id,
 
-
             "marcador_id": marcador["marcador_id"],
 
-
-            "marcador": marcador["nome_padrao"],
-
-
             "categoria": categoria,
-
 
             "resultado": str(
                 valor_encontrado["valor"]
             ),
 
-
             "valor_numerico": valor_encontrado["valor"],
-
 
             "unidade": valor_encontrado["unidade"],
 
 
-
-            "referencia_min":
-                parametro["valor_min"]
-                if parametro else None,
+            "referencia_min": parametro["valor_min"]
+            if parametro else None,
 
 
-
-            "referencia_max":
-                parametro["valor_max"]
-                if parametro else None,
+            "referencia_max": parametro["valor_max"]
+            if parametro else None,
 
 
-
-            "alerta_min":
-                parametro["alerta_min"]
-                if parametro else None,
+            "alerta_min": parametro["alerta_min"]
+            if parametro else None,
 
 
-
-            "alerta_max":
-                parametro["alerta_max"]
-                if parametro else None,
+            "alerta_max": parametro["alerta_max"]
+            if parametro else None,
 
 
-
-            "critico_min":
-                parametro["critico_min"]
-                if parametro else None,
+            "critico_min": parametro["critico_min"]
+            if parametro else None,
 
 
-
-            "critico_max":
-                parametro["critico_max"]
-                if parametro else None,
-
+            "critico_max": parametro["critico_max"]
+            if parametro else None,
 
 
             "status": status,
 
 
-
-            "observacao":
-                parametro["observacao"]
-                if parametro else None
+            "observacao": parametro["observacao"]
+            if parametro else None
 
         }
 
 
 
+        salvar_resultado(
 
-     salvar_resultado(
-    dados["exame_id"],
-    dados["marcador_id"],
-    dados["categoria"],
-    dados["resultado"],
-    dados["valor_numerico"],
-    dados["unidade"],
-    dados["referencia_min"],
-    dados["referencia_max"],
-    dados["alerta_min"],
-    dados["alerta_max"],
-    dados["critico_min"],
-    dados["critico_max"],
-    dados["status"],
-    dados["observacao"]
-)
+            dados["exame_id"],
+
+            dados["marcador_id"],
+
+            dados["categoria"],
+
+            dados["resultado"],
+
+            dados["valor_numerico"],
+
+            dados["unidade"],
+
+            dados["referencia_min"],
+
+            dados["referencia_max"],
+
+            dados["alerta_min"],
+
+            dados["alerta_max"],
+
+            dados["critico_min"],
+
+            dados["critico_max"],
+
+            dados["status"],
+
+            dados["observacao"]
+
+        )
 
 
         resultados_salvos.append(
             dados
         )
-
 
 
     return resultados_salvos
