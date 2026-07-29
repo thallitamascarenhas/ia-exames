@@ -169,7 +169,8 @@ def processar_resultados_exame(
                         valor_linha
                     )
 
-
+if resultado:
+    print("CAPTURADO:", resultado.group(1))
                     if resultado:
 
 
