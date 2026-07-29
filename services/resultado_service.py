@@ -3,7 +3,23 @@ import re
 from database.supabase import supabase
 from database.resultados import salvar_resultado
 
+def converter_numero(texto):
 
+    texto = texto.strip()
+
+    # Ex.: 8.450
+    if "." in texto and "," not in texto:
+
+        partes = texto.split(".")
+
+        if len(partes[-1]) == 3:
+
+            texto = texto.replace(".", "")
+
+    # Ex.: 11,1
+    texto = texto.replace(",", ".")
+
+    return float(texto)
 
 def buscar_parametro(marcador_id):
 
@@ -157,11 +173,9 @@ def processar_resultados_exame(
                     if resultado:
 
 
-                        valor_encontrado = {
-
-                            "valor": float(
-                                resultado.group(1).replace(",", ".")
-                            ),
+                        "valor": converter_numero(
+    resultado.group(1)
+),
 
                             "unidade": resultado.group(2)
 
